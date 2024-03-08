@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+
+  
+  <rosparam file="$(find robot_control)/config/diff_driver_controller_params.yaml" command="load"/>
+  <rosparam file="$(find robot_control)/config/joint_limits.yaml" command="load"/>
+  <rosparam file="$(find robot_control)/config/joint_state_controller.yaml" command="load"/>
+
+
+  <arg name="model" default="$(find robot_description)/urdf/robot.urdf"/>
+  
+   <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+
+
+
+
+<!--
+  <node name="robot_hardware_interface" pkg="robot_control" type="arduinobot_interface_node" output="screen">
+     
+          <remap from="/myrobot1/mobile_base_controller/cmd_vel" to="/cmd_vel"/>
+          <remap from="/myrobot1/mobile_base_controller/odom" to="/odom"/>          
+  </node>
+  -->
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+        
+        args="/myrobot1/joint_state_controller  /myrobot1/mobile_base_controller">
+
+        
+  </node>
+ <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
+  
+
+
+   <node name="rviz" pkg="rviz" type="rviz" />
+
+</launch>
